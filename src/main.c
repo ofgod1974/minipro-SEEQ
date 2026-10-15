@@ -1133,11 +1133,16 @@ int parse_options(minipro_handle_t *handle, int argc, char **argv)
 					return EXIT_FAILURE;
 				break;
 			case 3:
-				if (set_parameter(handle, optarg,
-						  &device->voltages.vcc,
-						  bb ? VCC_BB_VOLTAGE :
-						       VCC_VOLTAGE))
+				if (device->chip_type == MP_LOGIC) {
+				    if (set_parameter(handle, optarg,
+						    &device->voltages.vcc, LOGIC_VOLTAGE))
 					return EXIT_FAILURE;
+				} else {
+				    if (set_parameter(handle, optarg,
+						    &device->voltages.vcc,
+						    bb ? VCC_BB_VOLTAGE : VCC_VOLTAGE))
+					return EXIT_FAILURE;
+				}
 				break;
 			case 4:
 				handle->cmdopts->set_spi_clock = 1;
@@ -1203,11 +1208,16 @@ int parse_options(minipro_handle_t *handle, int argc, char **argv)
 						       VCC_VOLTAGE))
 					return EXIT_FAILURE;
 			} else if (!strcasecmp(option, "vcc")) {
+			    if (device->chip_type == MP_LOGIC) {
 				if (set_parameter(handle, value,
-						  &device->voltages.vcc,
-						  bb ? VCC_BB_VOLTAGE :
-						       VCC_VOLTAGE))
-					return EXIT_FAILURE;
+						&device->voltages.vcc, LOGIC_VOLTAGE))
+				    return EXIT_FAILURE;
+			    } else {
+				if (set_parameter(handle, value,
+						&device->voltages.vcc,
+						bb ? VCC_BB_VOLTAGE : VCC_VOLTAGE))
+				    return EXIT_FAILURE;
+			    }
 			} else if (!strcasecmp(option, "spi_clock")) {
 				handle->cmdopts->set_spi_clock = 1;
 				if (!device->flags.can_adjust_clock)
@@ -1216,6 +1226,15 @@ int parse_options(minipro_handle_t *handle, int argc, char **argv)
 						  &device->spi_clock,
 						  SPI_CLOCK))
 					return EXIT_FAILURE;
+			} else if (!strcasecmp(option, "ovc_level")) {
+				/* T76 over-current trip level: 0 = firmware
+				 * default, 1..9 = 120/150/180/200/220/250/300/
+				 * 350/400 mA. */
+				errno = 0;
+				v = strtoul(value, &p_end, 0);
+				if ((p_end == value) || errno || v > 9)
+					return EXIT_FAILURE;
+				handle->cmdopts->ovc_level = (uint8_t)v;
 			} else
 				return EXIT_FAILURE;
 			break;

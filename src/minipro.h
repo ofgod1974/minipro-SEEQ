@@ -327,6 +327,7 @@ typedef struct cmdopts_s {
 	uint8_t set_i2c_addr;
 	uint8_t logic_quiet; /* suppress logic test messages (auto detect) */
 	char *logic_vcc;     /* -o vcc=<value> for the logic IC detection */
+	uint8_t ovc_level;	/* T76 over-current trip level 0..9 (0 = default) */
 	int filter_fuses;
 	int filter_locks;
 	int filter_uid;
