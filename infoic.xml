@@ -283849,6 +283849,17 @@
   <database
       type="INFOIC2PLUS"
     >
+    <!-- Experimental custom T48 algorithm; never use an AT28C64B alias. -->
+    <custom name="SEEQ">
+      <ic name="52B33,52B33@DIP28,DQ52B33-250"
+          type="1" protocol_id="0x80000002" variant="0x00"
+          read_buffer_size="0x20" write_buffer_size="0x20"
+          code_memory_size="0x2000" data_memory_size="0x00"
+          data_memory2_size="0x00" page_size="0x01" pages_per_block="0x00"
+          chip_id="0x00000000" voltages="0x0000" pulse_delay="0x2ee0"
+          flags="0x00000010" chip_info="0x0000" pin_map="0x40000000"
+          package_details="0x1c000000" config="NULL" />
+    </custom>
     <manufacturer
         name="AUTO"
       >

@@ -57,7 +57,7 @@ else
 endif
 
 COMMON_OBJECTS=src/xml.o src/jedec.o src/ihex.o src/srec.o src/database.o \
-		src/bitbang.o src/prom.o src/minipro.o src/tl866a.o \
+		src/bitbang.o src/prom.o src/seeq52b33.o src/minipro.o src/tl866a.o \
 		src/tl866iiplus.o src/t48.o src/t56.o src/t76.o src/version.o \
 		src/cdecode.o src/cencode.o src/logic_detect.o $(USB)
 OBJECTS=$(COMMON_OBJECTS) src/main.o
@@ -107,6 +107,13 @@ endif
 
 
 all: $(PROGS)
+
+# No USB hardware needed: run the actual SEEQ and T48 code against a USB model.
+test-seeq:
+	$(CC) -std=gnu11 -O2 -g -DSEEQ52B33_TEST -iquote src \
+		src/seeq52b33.c src/t48.c src/bitbang.c tests/test_seeq52b33.c \
+		-lm -o tests/test-seeq52b33
+	./tests/test-seeq52b33
 
 $(VERSION_HEADER):
 	@echo "Creating $@"

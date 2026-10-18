@@ -98,6 +98,7 @@
 
 /* Custom chip protocols */
 #define CP_PROM				   0x01
+#define CP_SEEQ52B33                        0x02
 
 /* Adapters */
 #define TSOP48_ADAPTER			   0x00000001

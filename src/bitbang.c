@@ -25,6 +25,7 @@
 #include "minipro.h"
 #include "bitbang.h"
 #include "prom.h"
+#include "seeq52b33.h"
 #include "usb.h"
 
 static inline uint8_t PIN(uint8_t pin, uint8_t count)
@@ -83,6 +84,8 @@ int bb_begin_transaction(minipro_handle_t *handle)
 	switch (handle->device->protocol_id) {
 	case CP_PROM:
 		return prom_init(handle);
+	case CP_SEEQ52B33:
+		return seeq52b33_init(handle);
 	default:
 		fprintf(stderr, "Unimplemented bb_begin_transaction\n");
 		return EXIT_FAILURE;
@@ -94,6 +97,8 @@ int bb_end_transaction(minipro_handle_t *handle)
 	switch (handle->device->protocol_id) {
 	case CP_PROM:
 		return prom_terminate(handle);
+	case CP_SEEQ52B33:
+		return seeq52b33_terminate(handle);
 	default:
 		fprintf(stderr, "Unimplemented bb_end_transaction\n");
 		return EXIT_FAILURE;
@@ -106,6 +111,10 @@ int bb_read_block(minipro_handle_t *handle, uint8_t type, uint32_t addr,
 	switch (handle->device->protocol_id) {
 	case CP_PROM:
 		return prom_read(handle, addr, buf, len);
+	case CP_SEEQ52B33:
+		if (type == MP_CODE)
+			return seeq52b33_read(handle, addr, buf, len);
+		return EXIT_FAILURE;
 	default:
 		fprintf(stderr, "Unimplemented read_block\n");
 		return EXIT_FAILURE;
@@ -115,6 +124,8 @@ int bb_read_block(minipro_handle_t *handle, uint8_t type, uint32_t addr,
 int bb_write_block(minipro_handle_t *handle, uint8_t type, uint32_t addr,
 		   uint8_t *buf, size_t len)
 {
+	if (handle->device->protocol_id == CP_SEEQ52B33 && type == MP_CODE)
+		return seeq52b33_write(handle, addr, buf, len);
 	fprintf(stderr, "Unimplemented write_block\n");
 	return EXIT_FAILURE;
 }
@@ -166,6 +177,8 @@ int bb_protect_on(minipro_handle_t *handle)
 
 int bb_erase(minipro_handle_t *handle)
 {
+	if (handle->device->protocol_id == CP_SEEQ52B33)
+		return seeq52b33_erase(handle);
 	fprintf(stderr, "Unimplemented bb_erase\n");
 	return EXIT_FAILURE;
 }

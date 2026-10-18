@@ -28,6 +28,7 @@
 #include "b64/cdecode.h"
 #include "xml.h"
 #include "database.h"
+#include "win_compat.h"
 
 #ifdef _WIN32
 #include <Shlobj.h>

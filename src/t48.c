@@ -1109,7 +1109,7 @@ int t48_firmware_update(minipro_handle_t *handle, const char *firmware)
 	return EXIT_SUCCESS;
 }
 
-#define T48_NPINS 56
+#define T48_NPINS T48_BB_PIN_COUNT
 
 static pin_driver_t last_pinstate[T48_NPINS];
 static uint8_t last_direction[T48_NPINS];
@@ -1441,6 +1441,11 @@ int t48_get_zif_state(minipro_handle_t *handle, uint8_t *zif)
 	if (msg_recv(handle->usb_handle, msg, sizeof(msg)))
 		return EXIT_FAILURE;
 	for(int i=0;i<T48_NPINS;i++) zif[i]=(msg[8+(i>>3)]>>(i&7))&1;
+	if (handle->device && handle->device->flags.custom_protocol &&
+	    handle->device->protocol_id == CP_SEEQ52B33 && msg[1]) {
+		fprintf(stderr, "SEEQ: pin read reported overcurrent.\n");
+		return EXIT_FAILURE;
+	}
 	return EXIT_SUCCESS;
 }
 
@@ -1505,6 +1510,32 @@ int t48_set_pin_drivers(minipro_handle_t *handle, pin_driver_t *pins)
 	if(err) return err;
 	/* Set VPP pins */
         return t48_set_vpp_pins(handle,pins,1);
+}
+
+int t48_seeq_power_on(minipro_handle_t *handle, pin_driver_t *pins)
+{
+	float volts[4];
+	pin_driver_t no_vpp[T48_NPINS] = {{0}};
+	last_j1vcc = 0; /* also applies to the voltage-only command below */
+	/* Configure the logic supply and VCC DAC before connecting the socket.
+	 * In particular do NOT call t48_set_voltages(): its VPP is >=9 V and
+	 * its VCC indices differ from the bitbang database indices. */
+	if (t48_set_vpp_pins(handle, no_vpp, 0) ||
+	    t48_set_vccio_voltagef(handle, 3.3f, 0.2f) ||
+	    t48_set_vcc_voltagef(handle, 5.0f, 0.15f))
+		return EXIT_FAILURE;
+	/* 600 ms is the upstream DAC settling interval. */
+	usleep(600000);
+	if (t48_set_gnd_pins(handle, pins, 0) ||
+	    t48_set_vcc_pins(handle, pins, 0))
+		return EXIT_FAILURE;
+	usleep(20000);
+	if (t48_measure_voltages(handle, volts) ||
+	    !isfinite(volts[2]) || volts[2] < 4.5f || volts[2] > 5.5f) {
+		fprintf(stderr, "SEEQ: VCC measurement outside 4.5..5.5 V.\n");
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
 }
 
 static int zif_pin_state(uint8_t *msg, uint8_t pin)

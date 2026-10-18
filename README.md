@@ -1,4 +1,17 @@
 # minipro
+
+This checkout adds an **experimental SEEQ 52B33 / DQ52B33-250 DIP28 driver for
+the T48**. See [the Italian setup and validation guide](doc/seeq52b33-it.md).
+It has software/protocol tests but has not been validated on real hardware.
+
+This is a derivative of [Walter Haslbeck's minipro fork](https://github.com/whaslbeck/minipro),
+based on revision `cfe2171ca1b23399558b8d2a603a2ac3fa3faf5d`.
+Credit for the original MiniPRO project goes to **Valentin Dudouyt** and
+**David Griffith**, its maintainers and all upstream contributors. Walter
+Haslbeck supplied the T48 extensions used as the basis for this work.
+The SEEQ additions are maintained here by **ofgod1974** and are not an
+official upstream release. See [credits and provenance](CREDITS-SEEQ.md).
+
 ## Latest "stable" version 0.7.4
 
 An open source program for controlling XGecu's series of chip programmers.

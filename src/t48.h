@@ -20,6 +20,7 @@
 
 #define T48_FIRMWARE_VERSION 0x127
 #define T48_FIRMWARE_STRING  "01.1.39"
+#define T48_BB_PIN_COUNT 56
 
 /* T48 low level functions. */
 int t48_begin_transaction(minipro_handle_t *handle);
@@ -51,6 +52,8 @@ int t48_set_zif_state(minipro_handle_t *handle, uint8_t *zif);
 int t48_get_zif_state(minipro_handle_t *handle, uint8_t *zif);
 int t48_set_pin_drivers(minipro_handle_t *handle, pin_driver_t *pins);
 int t48_set_voltages(minipro_handle_t *handle, uint8_t vcc, uint8_t vpp);
+/* SEEQ uses only 5 V; no VPP or external ICSP power is enabled. */
+int t48_seeq_power_on(minipro_handle_t *, pin_driver_t *);
 
 
 int t48_set_input_and_pullup(minipro_handle_t *handle);

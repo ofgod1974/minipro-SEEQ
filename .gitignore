@@ -1,4 +1,8 @@
 *.o
+build-seeq/
+build-seeq-tests/
+tests/test-seeq52b33
+tests/test-seeq52b33.exe
 minipro
 minipro-query-db
 version.h

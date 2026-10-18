@@ -35,6 +35,8 @@
 #include "ihex.h"
 #include "srec.h"
 #include "minipro.h"
+#include "seeq52b33.h"
+#include "win_compat.h"
 #include "version.h"
 
 #ifdef _WIN32
@@ -2135,6 +2137,12 @@ int write_page_file(minipro_handle_t *handle, uint8_t type, size_t size)
 	size_t file_size = size;
 	if (open_file(handle, file_data, &file_size))
 		return EXIT_FAILURE;
+	if (handle->device->flags.custom_protocol &&
+	    handle->device->protocol_id == CP_SEEQ52B33 && file_size != size) {
+		fprintf(stderr, "SEEQ: image must be exactly 8192 bytes; -s/-S cannot override this.\n");
+		free(file_data);
+		return EXIT_FAILURE;
+	}
 	if (file_size != size) {
 		if (!handle->cmdopts->size_error) {
 			fprintf(stderr,
@@ -2180,8 +2188,10 @@ int write_page_file(minipro_handle_t *handle, uint8_t type, size_t size)
 		}
 	}
 
-	/* Perform an erase first */
-	if (erase_device(handle)) {
+	/* SEEQ handles erase-before-write per byte, preserving identical bytes.
+	 * An explicit -E still performs a full erase via the dedicated driver. */
+	if (!(handle->device->flags.custom_protocol &&
+	      handle->device->protocol_id == CP_SEEQ52B33) && erase_device(handle)) {
 		free(file_data);
 		return EXIT_FAILURE;
 	}
@@ -3548,6 +3558,12 @@ int main(int argc, char **argv)
 				argv[optind - 1]);
 		minipro_close(handle);
 		print_help_and_exit(argv[0]);
+	}
+
+	if (device->flags.custom_protocol && device->protocol_id == CP_SEEQ52B33 &&
+	    seeq52b33_validate(handle)) {
+		minipro_close(handle);
+		return EXIT_FAILURE;
 	}
 
 	/* Run a bad pin contact test if requested. */
