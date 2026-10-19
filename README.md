@@ -1,8 +1,11 @@
-# minipro
+# minipro + SEEQ
 
 This checkout adds an **experimental SEEQ 52B33 / DQ52B33-250 DIP28 driver for
 the T48**. See [the Italian setup and validation guide](doc/seeq52b33-it.md).
 It has software/protocol tests but has not been validated on real hardware.
+
+Project: [ofgod1974/minipro-SEEQ](https://github.com/ofgod1974/minipro-SEEQ).
+[Windows download](https://github.com/ofgod1974/minipro-SEEQ/releases/tag/v0.7.4-seeq52b33-alpha.1).
 
 This is a derivative of [Walter Haslbeck's minipro fork](https://github.com/whaslbeck/minipro),
 based on revision `cfe2171ca1b23399558b8d2a603a2ac3fa3faf5d`.
@@ -151,8 +154,8 @@ sudo dnf install make pkg-config git gcc libusb1-devel zlib-ng-compat-devel
 
 ### Checkout source code and compile 
 ```nohighlight
-git clone https://github.com/whaslbeck/minipro.git
-cd minipro
+git clone https://github.com/ofgod1974/minipro-SEEQ.git
+cd minipro-SEEQ
 make
 sudo make install
 ```
@@ -286,8 +289,8 @@ port install libusb
 ```
 ### Checkout source code and compile
 ```nohighlight
-git clone git@gitlab.com:DavidGriffith/minipro.git
-cd minipro
+git clone https://github.com/ofgod1974/minipro-SEEQ.git
+cd minipro-SEEQ
 make
 sudo make install
 ```
