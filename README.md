@@ -1,8 +1,11 @@
 # minipro + SEEQ
 
-This checkout adds an **experimental SEEQ 52B33 / DQ52B33-250 DIP28 driver for
+This checkout adds an **experimental SEEQ 52B33 DIP28 driver for
 the T48**. See [the Italian setup and validation guide](doc/seeq52b33-it.md).
-It has software/protocol tests but has not been validated on real hardware.
+**Hardware test reported on 2026-10-23:** a SEEQ **DQ52B33-350** was read and
+reprogrammed with a **T48, firmware 00.1.39**, using the Windows release.
+The 8192-byte readback matches the programmed image by SHA-256.
+See [the hardware test report](#hardware-test-report-2026-10-23).
 
 Project: [ofgod1974/minipro-SEEQ](https://github.com/ofgod1974/minipro-SEEQ).
 [Windows download](https://github.com/ofgod1974/minipro-SEEQ/releases/tag/v0.7.4-seeq52b33-alpha.1).
@@ -15,7 +18,37 @@ Haslbeck supplied the T48 extensions used as the basis for this work.
 The SEEQ additions are maintained here by **ofgod1974** and are not an
 official upstream release. See [credits and provenance](CREDITS-SEEQ.md).
 
-## Latest "stable" version 0.7.4
+## Hardware test report (2026-10-23)
+
+Reported by **ofgod1974**, with photographs of the physical chip and PowerShell
+results supplied by the tester. This is a real hardware report, separate from
+the 11 simulated USB/protocol tests included in the project.
+
+| Item | Tested configuration / result |
+| --- | --- |
+| EEPROM | SEEQ DQ52B33-350, DIP28, 8192 bytes |
+| Programmer | XGecu T48, firmware 00.1.39 |
+| Software | Windows build `v0.7.4-seeq52b33-alpha.1`, profile `52B33@DIP28` |
+| Application | RAM OMB5 Song cartridge for the ELKA OMB5 |
+| Initial reads | Two 8192-byte dumps with identical SHA-256 hashes |
+| Reprogramming | Tester reports successful programming; subsequent 8192-byte readback has the same SHA-256 as the source image |
+
+SHA-256 shared by `OMB5_RAM5_S.BIN` and the subsequent `verificaOMB5S.bin`:
+
+```text
+487cb5e7374992acb40e77212831876ef08d9b46c15f563bc7df9aeabf87b997
+```
+
+This validates the reported read/program/readback workflow on this chip and
+configuration. Support remains experimental: other variants, including
+DQ52B33-250 and 52B33H, and other firmware versions are not established by this
+test. Chip Clear was not tested; the driver uses byte erase/program with /CC
+held high. No oscilloscope timing measurements were supplied.
+
+The original screenshots and EEPROM image are not redistributed here.
+This update documents the existing release; it does not change the executable.
+
+## Latest "stable" upstream version 0.7.4
 
 An open source program for controlling XGecu's series of chip programmers.
 
