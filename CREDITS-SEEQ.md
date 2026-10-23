@@ -25,6 +25,11 @@ The programming sequence was derived from the SEEQ Data Book 1988,
 52B33 datasheet (October 1987), printed pages 1-11 through 1-16. Datasheet
 documentation does not constitute manufacturer approval of this implementation.
 
-**Validation status:** software/protocol tests pass; the SEEQ algorithm has
-not been electrically validated with a real T48 and 52B33. This fork is
-experimental and is not an official release of either upstream project.
+**Validation status:** software/protocol tests pass. On 2026-10-23,
+**ofgod1974** reported a successful read/program/readback test with a real
+**SEEQ DQ52B33-350** and **T48 firmware 00.1.39**, using the Windows release;
+the 8192-byte readback matches the source image by SHA-256. See the
+[hardware report](README.md#hardware-test-report-2026-10-23) for evidence and
+scope. Other variants and electrical timing measurements remain unvalidated.
+This fork is experimental and is not an official release of either upstream
+project.
