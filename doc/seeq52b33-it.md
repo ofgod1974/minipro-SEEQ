@@ -1,13 +1,23 @@
-# SEEQ 52B33 / DQ52B33-250 con T48 — minipro 0.7.4-seeq1
+# SEEQ 52B33 con T48 — minipro 0.7.4-seeq1
 
 Modifica dedicata alla EEPROM SEEQ parallela **8192 x 8, DIP28, 5 V**.
 Il profilo si chiama **52B33@DIP28**; alias: **52B33**, **DQ52B33-250**.
 Non selezionare AT28C64B per usare questo driver. Non occorrono Arduino,
 adattatori attivi, breadboard o modifiche al firmware del T48.
 
-**Stato: sperimentale, compilato e testato con un modello USB; non collaudato
-su T48 e SEEQ reali.** L'eseguibile pronto elimina il lavoro di compilazione,
-ma non sostituisce il collaudo elettrico descritto sotto.
+**Stato: sperimentale, con prova reale riportata il 23 ottobre 2026.**
+ofgod1974 ha letto e riprogrammato una **SEEQ DQ52B33-350 DIP28** della
+cartuccia **RAM OMB5 Song per ELKA OMB5**, usando la release Windows
+`v0.7.4-seeq52b33-alpha.1`, il profilo `52B33@DIP28` e un **T48 con firmware
+00.1.39**. Due letture iniziali da 8192 byte hanno hash identici; dopo la
+programmazione, la rilettura da 8192 byte ha lo stesso SHA-256 del file scritto.
+Il [resoconto nel README](../README.md#hardware-test-report-2026-10-23)
+riporta configurazione, risultato e hash.
+
+La prova riguarda questo chip e questa configurazione: non dimostra il
+funzionamento delle varianti DQ52B33-250/52B33H o di altri firmware, ne'
+costituisce una misura elettrica dei tempi. Restano disponibili gli 11 test
+simulati del protocollo e le verifiche a zoccolo vuoto descritte sotto.
 
 ## Hardware e posizionamento
 
